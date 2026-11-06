@@ -1,0 +1,108 @@
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Fredoka", ui-rounded, system-ui, sans-serif;
+  --font-sans: "Nunito", ui-sans-serif, system-ui, sans-serif;
+
+  --color-jungle-950: #042816;
+  --color-jungle-900: #06381f;
+  --color-jungle-800: #0b5a2e;
+  --color-jungle-700: #136b38;
+  --color-jungle-600: #1d7f45;
+  --color-leaf: #56db3a;
+  --color-leaf-dark: #2e9a1c;
+  --color-lagoon: #2bb8ba;
+  --color-lagoon-dark: #13797b;
+  --color-sunny: #ffd54a;
+  --color-sunny-dark: #e0ae10;
+  --color-mango: #f68b2f;
+  --color-mango-dark: #c9621a;
+  --color-berry: #ec5b8e;
+  --color-cream: #fff8e5;
+  --color-mint: #eff7f0;
+  --color-ink: #1f2a24;
+  --color-muted: #5e6e64;
+
+  --animate-sway: sway 5s ease-in-out infinite;
+  --animate-bob: bob 3s ease-in-out infinite;
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-drift: drift 70s linear infinite;
+  --animate-spin-slow: spin 40s linear infinite;
+  --animate-flap: flap 0.12s ease-in-out infinite alternate;
+  --animate-blink: blink 5s infinite;
+  --animate-wiggle: wiggle 0.6s ease-in-out;
+  --animate-swing: swing 4s ease-in-out infinite;
+  --animate-marquee: marquee 28s linear infinite;
+  --animate-shimmer: shimmer 1.6s linear infinite;
+  --animate-fall: fall 12s linear infinite;
+  --animate-shake: shake 0.45s ease-in-out;
+  --animate-pulse-ring: pulse-ring 2.4s ease-out infinite;
+
+  @keyframes sway { 0%, 100% { transform: rotate(-2.5deg); } 50% { transform: rotate(2.5deg); } }
+  @keyframes bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
+  @keyframes float { 0%, 100% { transform: translateY(0) rotate(0); } 50% { transform: translateY(-14px) rotate(3deg); } }
+  @keyframes drift { from { transform: translateX(-30vw); } to { transform: translateX(130vw); } }
+  @keyframes flap { from { transform: scaleY(1); } to { transform: scaleY(0.35); } }
+  @keyframes blink { 0%, 93%, 100% { transform: scaleY(1); } 96% { transform: scaleY(0.1); } }
+  @keyframes wiggle { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-12deg); } 75% { transform: rotate(12deg); } }
+  @keyframes swing { 0%, 100% { transform: rotate(7deg); } 50% { transform: rotate(-7deg); } }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @keyframes shimmer { from { background-position: -200% 0; } to { background-position: 200% 0; } }
+  @keyframes fall {
+    0% { transform: translate3d(0, -10vh, 0) rotate(0deg); opacity: 0; }
+    10% { opacity: 1; }
+    100% { transform: translate3d(var(--leaf-x, 60px), 105vh, 0) rotate(540deg); opacity: 0.9; }
+  }
+  @keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-8px); } 40%, 80% { transform: translateX(8px); } }
+  @keyframes pulse-ring { 0% { transform: scale(0.9); opacity: 0.7; } 100% { transform: scale(1.6); opacity: 0; } }
+}
+
+@layer base {
+  html { scroll-behavior: smooth; -webkit-tap-highlight-color: transparent; }
+  body {
+    @apply bg-cream font-sans text-ink antialiased;
+    overflow-x: hidden;
+  }
+  h1, h2, h3, h4 { @apply font-display; }
+  ::selection { @apply bg-sunny text-jungle-900; }
+  button { cursor: pointer; }
+  :focus-visible { @apply outline-none ring-4 ring-sunny/70; }
+}
+
+@utility btn {
+  @apply inline-flex select-none items-center justify-center gap-2 rounded-full px-6 py-3 font-display text-base font-semibold transition-all duration-150 hover:-translate-y-0.5 active:translate-y-1 active:shadow-none disabled:translate-y-0 disabled:cursor-not-allowed disabled:opacity-60;
+}
+
+@layer components {
+  .btn-primary { @apply btn bg-leaf text-jungle-900 shadow-[0_5px_0_var(--color-leaf-dark)]; }
+  .btn-dark { @apply btn bg-jungle-800 text-white shadow-[0_5px_0_var(--color-jungle-950)]; }
+  .btn-sunny { @apply btn bg-sunny text-jungle-900 shadow-[0_5px_0_var(--color-sunny-dark)]; }
+  .btn-mango { @apply btn bg-mango text-white shadow-[0_5px_0_var(--color-mango-dark)]; }
+  .btn-light { @apply btn bg-white text-jungle-800 shadow-[0_5px_0_rgb(11_90_46/0.15)] ring-2 ring-jungle-800/10; }
+  .btn-ghost { @apply btn px-4 text-jungle-800 hover:bg-jungle-800/5; }
+  .card { @apply rounded-[28px] bg-white shadow-[0_12px_32px_-14px_rgb(11_90_46/0.3)] ring-1 ring-jungle-800/5; }
+  .input {
+    @apply w-full rounded-2xl border-2 border-jungle-800/10 bg-white px-4 py-3 text-ink transition outline-none placeholder:text-muted/60 focus:border-lagoon focus:ring-4 focus:ring-lagoon/20;
+  }
+  .label { @apply mb-1.5 block text-sm font-extrabold text-jungle-800; }
+  .eyebrow { @apply font-display text-sm font-semibold tracking-[0.18em] uppercase; }
+  .skeleton {
+    background: linear-gradient(90deg, #e8f1e9 0%, #f7fbf7 50%, #e8f1e9 100%);
+    background-size: 200% 100%;
+    @apply animate-shimmer;
+  }
+}
+
+/* SVG parts animated with CSS need their own transform box. */
+.origin-fill-center { transform-box: fill-box; transform-origin: center; }
+.origin-fill-bottom { transform-box: fill-box; transform-origin: 50% 100%; }
+.origin-fill-top { transform-box: fill-box; transform-origin: 50% 0%; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
