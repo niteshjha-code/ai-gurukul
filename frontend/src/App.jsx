@@ -17,6 +17,8 @@ const Progress = lazy(() => import('./pages/Progress'));
 const NotFound = lazy(() => import('./pages/NotFound'));
 const Profiles = lazy(() => import('./pages/Profiles'));
 const Parent = lazy(() => import('./pages/Parent'));
+const Games = lazy(() => import('./pages/Games'));
+const GamePlay = lazy(() => import('./pages/GamePlay'));
 
 function RequireAuth({ children }) {
   const { user, ready } = useAuth();
@@ -65,6 +67,8 @@ export default function App() {
             <Route path="/stories" element={<Library />} />
             <Route path="/stories/:id" element={<StoryView />} />
             <Route path="/quiz/:id" element={<Quiz />} />
+            <Route path="/games" element={<Games />} />
+            <Route path="/games/:game" element={<GamePlay />} />
             <Route path="/homework" element={<Homework />} />
             <Route path="/progress" element={<Progress />} />
           </Route>

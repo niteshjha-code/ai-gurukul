@@ -103,7 +103,20 @@ db.exec(`
     PRIMARY KEY (user_id, badge)
   );
 
+  CREATE TABLE IF NOT EXISTS game_plays (
+    id         INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id    INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    game       TEXT NOT NULL,
+    subject    TEXT,
+    story_id   INTEGER REFERENCES stories(id) ON DELETE SET NULL,
+    score      INTEGER NOT NULL,
+    total      INTEGER NOT NULL,
+    xp         INTEGER NOT NULL DEFAULT 0,
+    created_at TEXT NOT NULL DEFAULT (datetime('now'))
+  );
+
   CREATE INDEX IF NOT EXISTS idx_stories_user  ON stories(user_id, created_at);
+  CREATE INDEX IF NOT EXISTS idx_games_user    ON game_plays(user_id, created_at);
   CREATE INDEX IF NOT EXISTS idx_attempts_user ON quiz_attempts(user_id, created_at);
   CREATE INDEX IF NOT EXISTS idx_activity_user ON activity(user_id, created_at);
 `);

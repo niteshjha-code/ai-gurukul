@@ -15,6 +15,7 @@ import storyRoutes from './routes/stories.js';
 import quizRoutes from './routes/quizzes.js';
 import homeworkRoutes from './routes/homework.js';
 import parentRoutes from './routes/parent.js';
+import gameRoutes from './routes/games.js';
 
 export const app = express();
 app.disable('x-powered-by');
@@ -35,6 +36,7 @@ app.use('/api/stories', storyRoutes);
 app.use('/api/quizzes', quizRoutes);
 app.use('/api/homework', homeworkRoutes);
 app.use('/api/parent', parentRoutes);
+app.use('/api/games', gameRoutes);
 app.get('/api/progress', requireAuth, (req, res) => res.json(summary(req.user.id)));
 
 // Story illustrations: served from the disk cache, or queued and answered with 202 until ready.

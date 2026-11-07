@@ -46,6 +46,19 @@ export const BADGES = [
   { id: 'homework_hero', name: 'Homework Hero', emoji: '🦸', desc: 'Ask Guru Owl 3 homework questions', test: (s) => s.homework >= 3 },
   { id: 'explorer', name: 'Explorer', emoji: '🧭', desc: 'Learn in 3 different subjects', test: (s) => s.subjects >= 3 },
   { id: 'on_fire', name: 'On Fire', emoji: '🔥', desc: 'Learn 3 days in a row', test: (s) => s.streak >= 3 },
+  { id: 'game_on', name: 'Game On', emoji: '🎮', desc: 'Play 5 learning games', test: (s) => s.games >= 5 },
 ];
+
+// Learning games run entirely in the browser (no AI). The API only records results and awards XP.
+export const GAMES = [
+  { id: 'memory', name: 'Memory Match', emoji: '🃏' },
+  { id: 'scramble', name: 'Word Scramble', emoji: '🔤' },
+  { id: 'order', name: 'Put in Order', emoji: '🧩' },
+  { id: 'catch', name: 'Fruit Catch', emoji: '🍌' },
+  { id: 'math', name: 'Monkey Math', emoji: '🐒' },
+];
+
+// Game XP is capped per day so games stay a bonus and quizzes stay the main way to level up.
+export const GAME_XP_DAILY_CAP = 50;
 
 export const AVATARS = ['lion', 'elephant', 'monkey', 'owl'];

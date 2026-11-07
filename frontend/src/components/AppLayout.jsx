@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation, useOutlet } from 'react-router-dom';
 import { AnimatePresence, motion } from 'motion/react';
-import { BookOpen, ChartNoAxesColumn, HelpCircle, Home, LogOut, ShieldCheck, Sparkles, UserPen, Users } from 'lucide-react';
+import { BookOpen, ChartNoAxesColumn, Gamepad2, HelpCircle, Home, LogOut, ShieldCheck, Sparkles, UserPen, Users } from 'lucide-react';
 import Logo from './Logo';
 import { Avatar } from './Mascots';
 import ProfileModal from './ProfileModal';
@@ -11,6 +11,7 @@ const NAV = [
   { to: '/dashboard', label: 'Home', icon: Home },
   { to: '/create', label: 'Create', icon: Sparkles },
   { to: '/stories', label: 'Library', icon: BookOpen, end: true },
+  { to: '/games', label: 'Games', icon: Gamepad2 },
   { to: '/homework', label: 'Homework', icon: HelpCircle },
   { to: '/progress', label: 'Progress', icon: ChartNoAxesColumn },
 ];
@@ -87,7 +88,7 @@ export default function AppLayout() {
           <Logo to="/dashboard" />
           <nav className="hidden items-center gap-1 rounded-full bg-white p-1 shadow-sm ring-1 ring-jungle-800/5 lg:flex" aria-label="Main">
             {NAV.map(({ to, label, icon: Icon, end }) => (
-              <NavLink key={to} to={to} end={end} className="relative rounded-full px-4 py-2 font-display font-medium">
+              <NavLink key={to} to={to} end={end} className="relative rounded-full px-3 py-2 font-display font-medium xl:px-4">
                 {({ isActive }) => (
                   <>
                     {isActive && <motion.span layoutId="nav-pill" className="absolute inset-0 rounded-full bg-jungle-800" transition={{ type: 'spring', stiffness: 400, damping: 32 }} />}
@@ -124,10 +125,10 @@ export default function AppLayout() {
 
       {/* Bottom tab bar for phones and tablets */}
       <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-jungle-800/10 bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur-md lg:hidden" aria-label="Main">
-        <ul className="mx-auto grid max-w-lg grid-cols-5">
+        <ul className="mx-auto grid max-w-lg grid-cols-6">
           {NAV.map(({ to, label, icon: Icon, end }) => (
             <li key={to}>
-              <NavLink to={to} end={end} className="relative flex flex-col items-center gap-0.5 py-2.5 text-[11px] font-bold">
+              <NavLink to={to} end={end} className="relative flex flex-col items-center gap-0.5 py-2.5 text-[10px] font-bold min-[400px]:text-[11px]">
                 {({ isActive }) => (
                   <>
                     {isActive && <motion.span layoutId="tab-dot" className="absolute top-0 h-1 w-10 rounded-b-full bg-leaf" />}

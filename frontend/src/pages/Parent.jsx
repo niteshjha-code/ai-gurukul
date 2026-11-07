@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { AnimatePresence, motion } from 'motion/react';
 import {
-  ArrowLeft, Award, BookOpen, Brain, ChevronDown, Flame, HelpCircle, KeyRound, Lightbulb, Lock, LogOut, Pencil,
+  ArrowLeft, Award, BookOpen, Brain, ChevronDown, Flame, Gamepad2, HelpCircle, KeyRound, Lightbulb, Lock, LogOut, Pencil,
   Play, Plus, Target, Trash2, TriangleAlert, CircleCheck, UserRound,
 } from 'lucide-react';
 import { api, timeAgo } from '../lib/api';
@@ -225,6 +225,7 @@ const FEED = {
   story: { icon: BookOpen, color: '#2BB8BA', verb: 'Read a story' },
   quiz: { icon: Target, color: '#8B5CF6', verb: 'Took a quiz' },
   homework: { icon: HelpCircle, color: '#F68B2F', verb: 'Asked for homework help' },
+  game: { icon: Gamepad2, color: '#EC5B8E', verb: 'Played a learning game' },
   badge: { icon: Award, color: '#E0AE10', verb: 'Earned a badge' },
 };
 
@@ -394,7 +395,7 @@ function ChildDetail({ id, onLearn }) {
                     <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl text-white" style={{ background: f.color }}>{e.emoji ? <span>{e.emoji}</span> : <f.icon size={16} />}</span>
                     <div className="min-w-0 flex-1">
                       <p className="text-sm font-bold text-jungle-900">
-                        {f.verb}{e.type === 'quiz' && <span className="text-muted"> • {e.score}/{e.total}</span>}
+                        {f.verb}{(e.type === 'quiz' || e.type === 'game') && <span className="text-muted"> • {e.score}/{e.total}</span>}
                       </p>
                       <p className="truncate text-sm text-muted">{e.title}</p>
                     </div>

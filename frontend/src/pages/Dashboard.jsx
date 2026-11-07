@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { ArrowRight, BookOpen, ChartNoAxesColumn, Flame, HelpCircle, Sparkles } from 'lucide-react';
+import { ArrowRight, BookOpen, ChartNoAxesColumn, Flame, Gamepad2, HelpCircle, Sparkles } from 'lucide-react';
 import { api } from '../lib/api';
 import { useAuth } from '../context/AuthContext';
 import { Avatar, Leaf, Owl } from '../components/Mascots';
@@ -18,6 +18,7 @@ function greeting() {
 
 const ACTIONS = [
   { to: '/create', title: 'Create a story', text: 'Pick any topic and let the magic begin', icon: Sparkles, className: 'bg-lagoon text-white', shadow: '#13797B' },
+  { to: '/games', title: 'Game Zone', text: 'Learn new words and maths by playing', icon: Gamepad2, className: 'bg-berry text-white', shadow: '#A82A58' },
   { to: '/homework', title: 'Ask Guru Owl', text: 'Get hints for tricky homework', icon: HelpCircle, className: 'bg-mango text-white', shadow: '#C9621A' },
   { to: '/progress', title: 'My progress', text: 'Levels, badges and scores', icon: ChartNoAxesColumn, className: 'bg-leaf text-jungle-900', shadow: '#2E9A1C' },
 ];
@@ -81,7 +82,7 @@ export default function Dashboard() {
       </section>
 
       {/* Quick actions */}
-      <section className="grid gap-4 sm:grid-cols-3">
+      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {ACTIONS.map((a, i) => (
           <motion.div key={a.to} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 * i }}>
             <Link to={a.to} className={`group flex h-full items-center gap-4 rounded-[28px] p-5 transition hover:-translate-y-1 active:translate-y-1 ${a.className}`} style={{ boxShadow: `0 6px 0 ${a.shadow}` }}>

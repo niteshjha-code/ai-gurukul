@@ -4,7 +4,7 @@
 
 **AI-powered learning made playful.**
 
-A jungle-themed, animated and fully responsive learning website for kids, with AI stories, poems and rhymes, quizzes, homework help, progress tracking and a Parent Corner for grown-ups.
+A jungle-themed, animated and fully responsive learning website for kids, with AI stories, poems and rhymes, quizzes, learning games, homework help, progress tracking and a Parent Corner for grown-ups.
 
 ![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)
 ![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)
@@ -41,11 +41,12 @@ A jungle-themed, animated and fully responsive learning website for kids, with A
 | 📖 | **AI Story Studio** | Type any topic, pick from 8 subjects, and get a story, poem or rhyme written for the child's age and reading level. Includes a "Surprise me" button. |
 | 🎨 | **Story reader** | AI illustration, read-aloud with paragraph highlighting, a moral, a fun fact and flip-card vocabulary. |
 | 🎯 | **Interactive quizzes** | Instant right/wrong feedback, cheering mascots, confetti, an animated score ring and a review of every answer. |
+| 🎮 | **Game Zone** | Five learning games: Memory Match, Word Scramble, Put in Order, Fruit Catch and Monkey Math. Word games are built from each story's own words and text, or from 8 ready-made subject word packs. They run entirely in the browser with no AI or API calls, and earn up to 50 XP a day. |
 | 📈 | **Personalized learning** | Each subject has a level from 1 to 5. Scoring 80% or more moves it up, under 50% moves it down, and the next stories and quizzes adapt. |
 | 🦉 | **Homework Help** | Chat with Guru Owl in **Hint**, **Steps** or **Explain** mode. Hints come first, so children learn rather than copy. |
-| 🏆 | **Progress & rewards** | XP, six jungle ranks, day streaks, subject levels, weekly activity, quiz history and 8 badges. |
+| 🏆 | **Progress & rewards** | XP, six jungle ranks, day streaks, subject levels, weekly activity, quiz history and 9 badges. |
 | 👨‍👩‍👧 | **Family accounts** | A parent signs up with consent and adds up to 6 children. Each child picks their buddy on the "Who's learning today?" screen. |
-| 🛡️ | **Parent Corner** | Locked with the account password. A family overview plus a report per child: written insights, subject levels, quiz scores, activity, the homework questions they asked, stories and badges. |
+| 🛡️ | **Parent Corner** | Locked with the account password. A family overview plus a report per child: written insights, subject levels, quiz scores, games played, activity, the homework questions they asked, stories and badges. |
 | 🌴 | **Animated & responsive** | Swaying trees, drifting clouds, falling leaves, a flying bee and original mascots. Phones get a bottom tab bar, and all animations respect the "reduce motion" setting. |
 | 🔒 | **Kid safety** | Unsafe topics are blocked before reaching the AI, plus child-safe AI instructions, per-child AI rate limits and signed image links. |
 
@@ -76,7 +77,7 @@ A jungle-themed, animated and fully responsive learning website for kids, with A
 | **Frontend** | React 19, Vite, Tailwind CSS 4, Motion (animations), React Router, Lucide icons, canvas-confetti |
 | **Backend** | Node.js 22.13+, Express 5, SQLite (`node:sqlite`, built into Node), JWT, bcrypt, express-rate-limit |
 | **AI** | Pollinations (free, no key) with optional Google Gemini or Groq free keys |
-| **Speech** | The browser's built-in Web Speech API for read-aloud |
+| **Speech & sound** | The browser's built-in Web Speech API for read-aloud, and the Web Audio API for game sound effects |
 
 ## 🚀 Getting started
 
@@ -108,6 +109,7 @@ Open **http://localhost:5173**, click **Start free**, create a family account an
 | Stories, poems, rhymes, quizzes, homework help | [Pollinations](https://pollinations.ai) text API | No |
 | Story illustrations | Pollinations image API | No |
 | Read-aloud | Browser Web Speech API | No |
+| Learning games | Built into the website (no AI) | No |
 
 The keyless Pollinations tier is slow and limited to about **one reply and one image every 45 seconds per IP**. AI Gurukul is built around that limit:
 
@@ -144,14 +146,15 @@ ai-gurukul/
 ├── frontend/                 React app
 │   └── src/
 │       ├── pages/            Landing, Login, Register, Profiles, Dashboard, StoryStudio,
-│       │                     StoryView, Library, Quiz, Homework, Progress, Parent
+│       │                     StoryView, Library, Quiz, Games, GamePlay, Homework, Progress, Parent
+│       ├── games/            The 5 games, word packs, story-to-game content and sound effects
 │       ├── components/       Mascots (SVG), JungleScene, AppLayout, ParentGate, ui ...
 │       ├── context/          AuthContext (child + parent sessions)
 │       ├── lib/              API client, helpers
 │       └── data/             Subjects, topic ideas, fun facts
 ├── backend/                  Express API
 │   ├── src/
-│   │   ├── routes/           auth, stories, quizzes, homework, parent
+│   │   ├── routes/           auth, stories, quizzes, games, homework, parent
 │   │   ├── services/         progress (XP, levels, badges), parent reports, profiles, images
 │   │   ├── ai/               providers, prompts, kid-safety filter, offline fallback
 │   │   ├── db.js             SQLite schema + automatic migrations
@@ -180,6 +183,8 @@ Every route is under `/api`. "Child" means a child's session token and "Parent" 
 | `GET` | `/quizzes/:id` | Child | Get the questions (without answers) |
 | `POST` | `/quizzes/:id/check` | Child | Check one answer |
 | `POST` | `/quizzes/:id/submit` | Child | Submit answers; returns score, XP, level change and badges |
+| `GET` | `/games/stats` | Child | Games played, game XP today, best scores and the child's maths level |
+| `POST` | `/games/finish` | Child | Save a game result; returns XP (2–10, capped at 50 a day), personal best and badges |
 | `POST` | `/homework/ask` | Child | Ask Guru Owl (`hint`, `steps` or `explain` mode) |
 | `GET` | `/homework/recent` | Child | Recent homework questions |
 | `GET` | `/progress` | Child | XP, rank, streak, levels, badges and recommendations |
@@ -199,7 +204,7 @@ Every route is under `/api`. "Child" means a child's session token and "Parent" 
 npm test          # same as: cd backend && npm test
 ```
 
-There are 12 tests covering sign-up and login, the kid-safety filter, story → quiz → score → level-up, badges, signed image links, Parent Corner locking, adding/switching/removing children, family privacy, password change, and the automatic database upgrade. They run with AI turned off and an in-memory database.
+There are 13 tests covering sign-up and login, the kid-safety filter, story → quiz → score → level-up, badges, game results and the daily game XP cap, signed image links, Parent Corner locking, adding/switching/removing children, family privacy, password change, and the automatic database upgrade. They run with AI turned off and an in-memory database.
 
 ## 🌍 Deploying
 

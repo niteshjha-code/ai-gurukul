@@ -7,6 +7,8 @@ import { StoryImage } from '../components/StoryCard';
 import { Lion } from '../components/Mascots';
 import { ErrorNote, MagicLoader, PageLoader, Stars, SubjectChip } from '../components/ui';
 import { KINDS } from '../data/catalog';
+import GameLinks from '../games/GameLinks';
+import { packFromStory } from '../games/content';
 
 function VocabCard({ word, meaning, index }) {
   const [flipped, setFlipped] = useState(false);
@@ -179,6 +181,12 @@ export default function StoryView() {
           </button>
         </div>
       </motion.section>
+
+      <section className="mt-10">
+        <h2 className="text-2xl font-semibold text-jungle-900">Play & learn 🎮</h2>
+        <p className="text-muted">Games made from this {kind?.name.toLowerCase() ?? 'story'}'s own words. Play to practise and earn XP!</p>
+        <GameLinks storyId={story.id} pack={packFromStory(story)} className="mt-4" />
+      </section>
     </article>
   );
 }

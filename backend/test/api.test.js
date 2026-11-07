@@ -101,6 +101,45 @@ test('other users cannot see my stories', async () => {
   token = saved;
 });
 
+test('games record results, award XP up to a daily cap, and earn the Game On badge', async () => {
+  const story = (await api('/stories')).data.stories[0];
+  const finish = (body) => api('/games/finish', { method: 'POST', body });
+  assert.equal((await finish({ game: 'chess', score: 1, total: 2 })).status, 400);
+  assert.equal((await finish({ game: 'memory', score: 5, total: 4 })).status, 400);
+  assert.equal((await finish({ game: 'memory', score: 1.5, total: 4 })).status, 400);
+  assert.equal((await finish({ game: 'memory', score: 1, total: 4, storyId: 99999 })).status, 404);
+
+  const xpBefore = (await api('/progress')).data.xp;
+  const first = await finish({ game: 'memory', score: 4, total: 4, storyId: story.id });
+  assert.equal(first.status, 201);
+  assert.equal(first.data.xpGained, 10);
+  assert.equal(first.data.previousBest, null);
+  const again = await finish({ game: 'memory', score: 2, total: 4, storyId: story.id });
+  assert.equal(again.data.xpGained, 6);
+  assert.equal(again.data.previousBest, 100);
+
+  // Keep playing: game XP stops at the daily cap, but plays still count.
+  let xp = first.data.xpGained + again.data.xpGained;
+  let badge = false;
+  for (let i = 0; i < 5; i++) {
+    const r = await finish({ game: 'math', score: 10, total: 10 });
+    xp += r.data.xpGained;
+    badge ||= r.data.newBadges.some((b) => b.id === 'game_on');
+  }
+  assert.equal(xp, 50);
+  assert.ok(badge, 'the 5th game earns the Game On badge');
+
+  const stats = (await api('/games/stats')).data;
+  assert.equal(stats.played, 7);
+  assert.equal(stats.xpToday, 50);
+  assert.equal(stats.games.memory.best, 100);
+  assert.equal(stats.mathLevel, 1);
+  const progress = (await api('/progress')).data;
+  assert.equal(progress.xp, xpBefore + 50);
+  assert.equal(progress.totals.games, 7);
+  assert.equal(progress.mastery.find((m) => m.subject === 'math').level, 1, 'games never change subject levels');
+});
+
 test('homework returns a friendly 503 when AI is offline', async () => {
   const res = await api('/homework/ask', { method: 'POST', body: { question: 'What is 7 x 8?', subject: 'math', mode: 'hint' } });
   assert.equal(res.status, 503);
@@ -144,7 +183,7 @@ test('parent can add, edit, switch to and remove explorers', async () => {
   const detail = (await api(`/parent/children/${meera.id}`)).data;
   assert.equal(detail.profile.childName, 'Meera');
   assert.deepEqual(detail.activity, []);
-  assert.equal(detail.badges.length, 8);
+  assert.equal(detail.badges.length, 9);
 
   // A sibling can switch to Meera without the parent password.
   token = learnerToken;

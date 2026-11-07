@@ -7,6 +7,7 @@ import { Lion, Monkey, Owl } from '../components/Mascots';
 import { celebrate, CountUp, ErrorNote, PageLoader, SubjectChip } from '../components/ui';
 import { useAuth } from '../context/AuthContext';
 import { subjectById } from '../data/catalog';
+import GameLinks from '../games/GameLinks';
 
 const LETTERS = ['A', 'B', 'C', 'D'];
 const LETTER_COLORS = ['#2BB8BA', '#F68B2F', '#8B5CF6', '#56DB3A'];
@@ -79,6 +80,11 @@ function Results({ result, quiz, onRetry }) {
           <button onClick={onRetry} className="btn-light"><RotateCcw size={18} /> Try again</button>
           <Link to={`/stories/${quiz.storyId}`} className="btn-light"><BookOpen size={18} /> Read the story</Link>
           <Link to={`/create?subject=${result.subject}`} className="btn-primary"><Sparkles size={18} /> New story</Link>
+        </div>
+
+        <div className="mt-8 border-t border-jungle-800/10 pt-6">
+          <p className="font-display font-semibold text-jungle-800">Keep learning with a game 🎮</p>
+          <GameLinks storyId={quiz.storyId} size="sm" className="mt-3 justify-center" />
         </div>
       </motion.div>
 

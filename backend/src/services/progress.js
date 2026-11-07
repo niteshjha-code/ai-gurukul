@@ -64,6 +64,7 @@ function counts(userId) {
     perfect: one('SELECT COUNT(*) AS n FROM quiz_attempts WHERE user_id = ? AND score = total'),
     homework: one('SELECT COUNT(*) AS n FROM homework WHERE user_id = ?'),
     subjects: one('SELECT COUNT(DISTINCT subject) AS n FROM stories WHERE user_id = ?'),
+    games: one('SELECT COUNT(*) AS n FROM game_plays WHERE user_id = ?'),
     streak: streak(userId),
   };
 }
@@ -121,6 +122,7 @@ export function summary(userId) {
       quizzes: stats.quizzes,
       homework: stats.homework,
       perfect: stats.perfect,
+      games: stats.games,
       avgScore: avg == null ? null : Math.round(avg),
     },
     mastery: SUBJECTS.map((s) => {
